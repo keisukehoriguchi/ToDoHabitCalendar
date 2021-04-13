@@ -23,7 +23,6 @@ struct ContentView: View {
                 Image(systemName: "2.circle")
                 Text("Calendar")}.tag(2)
         }
-        .tabViewStyle(PageTabViewStyle())
     }
 }
 
