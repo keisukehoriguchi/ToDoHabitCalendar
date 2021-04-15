@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MonthlyCalendarView: View {
     let days = ["月","火", "水", "木", "金", "土", "日"]
-    var weeks = []
+    var weeks = ["",""]
     
     var body: some View {
         VStack{
@@ -35,9 +35,9 @@ struct MonthlyCalendarView: View {
                     Spacer()
                 }
             }
-            ForEach(0...weeks.count){
-                
-            }
+//            ForEach(0...weeks.count){_ in 
+//                
+//            }
             
         }
     }
