@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    
     var body: some View {
         TabView {
             MainCalendarView()
@@ -27,7 +28,9 @@ struct ContentView: View {
 }
 
 struct ContentView_Previews: PreviewProvider {
+    @StateObject static private var calendarUseCase = CalendarUseCase()
+    
     static var previews: some View {
-        ContentView()
+        ContentView().environmentObject(calendarUseCase)
     }
 }

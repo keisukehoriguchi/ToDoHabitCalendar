@@ -6,26 +6,47 @@
 //
 
 import Foundation
+import SwiftUI
 
-
-struct CalendarUseCase {
+class CalendarUseCase: ObservableObject {
+    
+    init() {
+        getToday()
+        updateCalendar(y: thisYear, m: thisMonth)
+    }
+    
+    @Published var thisYear: Int = 0
+    @Published var thisMonth: Int = 0
+    @Published var today: Int = 0
+    
+    var monthCounter = 0
+    
+    @Published var numberOfWeeks: Int = 0
+    @Published var daysArray: [String] = ["1","2"]
+    var startDayOfWeek: Int = 0
+    
+    private let date = DateItems.ThisMonth.Request()
     
     let isLeapYear = { (year: Int) in year % 400 == 0 || (year % 4 == 0 && year % 100 != 0) }
     let zellerCongruence = { (year: Int, month: Int, day: Int) in (year + year/4 - year/100 + year/400 + (13 * month + 8)/5 + day) % 7 }
 
-    mutating func dateManager(year: Int, month: Int) -> [String] {
+    func dateManager(year: Int, month: Int){
         let firstDayOfWeek = dayOfWeek(year, month, 1)
         let numberOfCells = numberOfWeeks(year, month) * 7
         let days = numberOfDays(year, month)
-        let daysArray = alignmentOfDays(firstDayOfWeek, numberOfCells, days)
-        return daysArray
+        let Array = alignmentOfDays(firstDayOfWeek, numberOfCells, days)
+        daysArray = Array
     }
     
     func numberOfWeeks(year: Int, month: Int) {
         let weeks = numberOfWeeks(year, month)
-//        responseForCalendar?.responseNumberOfWeeks(response: weeks)
+        numberOfWeeks = weeks
     }
-    ///
+    
+    func updateCalendar(y:Int, m:Int) {
+        dateManager(year: y, month: m)
+        numberOfWeeks(year: y, month: m)
+    }
 
 }
 
@@ -83,5 +104,11 @@ extension CalendarUseCase {
             }
         }
         return daysArray
+    }
+    
+    func getToday() {
+        thisYear = date.year
+        thisMonth = date.month
+        today = date.day
     }
 }

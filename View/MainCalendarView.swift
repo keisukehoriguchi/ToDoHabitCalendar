@@ -12,7 +12,7 @@ struct MainCalendarView: View {
     
     var body: some View {
         VStack{
-            Text("Calender")
+            SampleCalendar()
             List{
                 Section(header:
                             Text("3/1")
@@ -21,7 +21,6 @@ struct MainCalendarView: View {
                         Text("13:00")
                         Text("Drink Water")
                     }
-                    
                     HStack {
                         Text("15:00")
                         Text("Drink Alcor")
@@ -30,20 +29,24 @@ struct MainCalendarView: View {
             }
         }
         .overlay(
-            HStack {
+            VStack{
                 Spacer()
-                Button(action: {
-                    addTaskHabitViewPushed = true
-                }, label: {
-                    Image(systemName: "goforward.plus")
-                        .resizable()
-                })
-                .frame(width: 70.0, height: 70.0)
-                .sheet(isPresented: $addTaskHabitViewPushed, content: {
-                    AddToDoHabit(addTaskHabitViewPushed: $addTaskHabitViewPushed)
-                })
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        addTaskHabitViewPushed = true
+                    }, label: {
+                        Image(systemName: "goforward.plus")
+                            .resizable()
+                    })
+                    .frame(width: 70.0, height: 70.0, alignment: .bottomTrailing)
+                    .sheet(isPresented: $addTaskHabitViewPushed, content: {
+                        AddToDoHabit(addTaskHabitViewPushed: $addTaskHabitViewPushed)
+                    })
+                }
+                .padding(.all, 7.0)
             }
-            .padding(.all, 7.0))
+        )
     }
 }
 
