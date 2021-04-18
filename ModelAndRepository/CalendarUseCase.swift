@@ -19,10 +19,18 @@ class CalendarUseCase: ObservableObject {
     @Published var thisMonth: Int = 0
     @Published var today: Int = 0
     
-    var monthCounter = 0
+    var monthCounter = 0 {
+        didSet{
+            let date = DateItems.MoveMonth.Request(monthCounter)
+            thisYear = date.year
+            thisMonth = date.month
+            updateCalendar(y: thisYear, m: thisMonth)
+        }
+    }
     
     @Published var numberOfWeeks: Int = 0
     @Published var daysArray: [String] = ["1","2"]
+    @Published var numberOfWeeksArray:[String] = []
     var startDayOfWeek: Int = 0
     
     private let date = DateItems.ThisMonth.Request()
@@ -41,11 +49,22 @@ class CalendarUseCase: ObservableObject {
     func numberOfWeeks(year: Int, month: Int) {
         let weeks = numberOfWeeks(year, month)
         numberOfWeeks = weeks
+        
+        numberOfWeeksArray = []
+        for item in 0 ..< numberOfWeeks {
+            let toStrig = String(item)
+            numberOfWeeksArray.append(toStrig)
+        }
     }
     
     func updateCalendar(y:Int, m:Int) {
         dateManager(year: y, month: m)
         numberOfWeeks(year: y, month: m)
+    }
+    
+    func backToToday(){
+        getToday()
+        updateCalendar(y: thisYear, m: thisMonth)
     }
 
 }

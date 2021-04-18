@@ -11,47 +11,40 @@ struct MainCalendarView: View {
     @State var addTaskHabitViewPushed:Bool = false
     
     var body: some View {
-        VStack{
-            SampleCalendar()
-            List{
-                Section(header:
-                            Text("3/1")
-                ) {
-                    HStack {
-                        Text("13:00")
-                        Text("Drink Water")
-                    }
-                    HStack {
-                        Text("15:00")
-                        Text("Drink Alcor")
-                    }
-                }
+        GeometryReader { g in
+            ScrollView{
+                VStack{
+                    MonthlyCalendarView()
+                    MainScheduleView(terms: 1)
+                }.frame(width: g.size.width, height: g.size.height, alignment: .center)
             }
-        }
-        .overlay(
-            VStack{
-                Spacer()
-                HStack {
+            .overlay(
+                VStack{
                     Spacer()
-                    Button(action: {
-                        addTaskHabitViewPushed = true
-                    }, label: {
-                        Image(systemName: "goforward.plus")
-                            .resizable()
-                    })
-                    .frame(width: 70.0, height: 70.0, alignment: .bottomTrailing)
-                    .sheet(isPresented: $addTaskHabitViewPushed, content: {
-                        AddToDoHabit(addTaskHabitViewPushed: $addTaskHabitViewPushed)
-                    })
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            addTaskHabitViewPushed = true
+                        }, label: {
+                            Image(systemName: "goforward.plus")
+                                .resizable()
+                        })
+                        .frame(width: 70.0, height: 70.0, alignment: .bottomTrailing)
+                        .sheet(isPresented: $addTaskHabitViewPushed, content: {
+                            AddToDoHabit(addTaskHabitViewPushed: $addTaskHabitViewPushed)
+                        })
+                    }
+                    .padding(.all, 7.0)
                 }
-                .padding(.all, 7.0)
-            }
-        )
+            )
+        }
     }
 }
 
 struct MainCalendarView_Previews: PreviewProvider {
+    @StateObject static private var calendarUseCase = CalendarUseCase()
+    
     static var previews: some View {
-        MainCalendarView()
+        MainCalendarView().environmentObject(calendarUseCase)
     }
 }

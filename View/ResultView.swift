@@ -13,17 +13,17 @@ struct ResultView: View {
     var body: some View {
         VStack{
             Picker(selection: $toDo_habit, label: Text("Picker"), content: {
-                Text("1").tag(true)
-                Text("2").tag(false)
+                Text("Task").tag(true)
+                Text("Habit").tag(false)
             })
             .pickerStyle(SegmentedPickerStyle())
             .padding()
             Image(systemName: "moon")
                 .resizable()
-                .frame(width: 300, height: 300, alignment: .center)
+                .frame(width: 250, height: 250, alignment: .center)
             Image(systemName: "goforward")
                 .resizable()
-                .frame(width: 300, height: 300, alignment: .center)
+                .frame(width: 250, height: 250, alignment: .center)
         }
     }
 }

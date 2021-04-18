@@ -14,20 +14,15 @@ struct DayViewOnCalendar: View {
     var body: some View {
         GeometryReader{ geometry in
             VStack{
+                Divider()
                 HStack{
                     Spacer()
                     Text(theDay)
                         .multilineTextAlignment(.center)
                     Spacer()
+                    Divider()
                 }
-//                Text("task1")
-//                    .foregroundColor(Color.white)
-//                    .background(Color.blue)
-//                Text("task1")
-//                    .foregroundColor(Color.white)
-//                    .background(Color.green)
             }
-//            .frame(width: (geometry.frame(in: .global).size.width)/8, height: (geometry.frame(in: .global).size.width)/8, alignment: .center)
         }
     }
 }
