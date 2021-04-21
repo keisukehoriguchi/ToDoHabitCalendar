@@ -17,6 +17,7 @@ class CalendarUseCase: ObservableObject {
     
     @Published var thisYear: Int = 0
     @Published var thisMonth: Int = 0
+    @Published var selectedDay:Int = 0
     @Published var today: Int = 0
     
     var monthCounter = 0 {
@@ -24,14 +25,14 @@ class CalendarUseCase: ObservableObject {
             let date = DateItems.MoveMonth.Request(monthCounter)
             thisYear = date.year
             thisMonth = date.month
+            selectedDay = 1
             updateCalendar(y: thisYear, m: thisMonth)
         }
     }
     
     @Published var numberOfWeeks: Int = 0
-    @Published var daysArray: [String] = ["1","2"]
+    @Published var daysArray: [Int] = [1,2]
     @Published var numberOfWeeksArray:[String] = []
-    var startDayOfWeek: Int = 0
     
     private let date = DateItems.ThisMonth.Request()
     
@@ -63,6 +64,7 @@ class CalendarUseCase: ObservableObject {
     }
     
     func backToToday(){
+        monthCounter = 0
         getToday()
         updateCalendar(y: thisYear, m: thisMonth)
     }
@@ -110,15 +112,15 @@ extension CalendarUseCase {
         return (firstDayOfWeek == 6 && days == 30) || (firstDayOfWeek >= 5 && days == 31)
     }
 
-    private func alignmentOfDays(_ firstDayOfWeek: Int, _ numberOfCells: Int, _ days: Int) -> [String] {
-        var daysArray: [String] = []
+    private func alignmentOfDays(_ firstDayOfWeek: Int, _ numberOfCells: Int, _ days: Int) -> [Int] {
+        var daysArray: [Int] = []
         var dayCount = 0
         for i in 0 ... numberOfCells {
             let diff = i - firstDayOfWeek
             if diff < 0 || dayCount >= days {
-                daysArray.append("")
+                daysArray.append(0)
             } else {
-                daysArray.append(String(diff + 1))
+                daysArray.append(diff + 1)
                 dayCount += 1
             }
         }
@@ -129,5 +131,6 @@ extension CalendarUseCase {
         thisYear = date.year
         thisMonth = date.month
         today = date.day
+        selectedDay = date.day
     }
 }

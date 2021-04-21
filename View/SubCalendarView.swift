@@ -16,7 +16,7 @@ struct SubCalendarView: View {
     var body: some View {
         VStack{
             HStack{
-                Text("\(calendarUseCase.thisYear)/\(calendarUseCase.thisMonth)/\(calendarUseCase.today)")
+                Text("\(calendarUseCase.thisYear.withoutComma)/\(calendarUseCase.thisMonth)/\(calendarUseCase.today)")
                 VStack{
                     //                        ForEach(){
                     Label("event1", image: "moon")

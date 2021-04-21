@@ -15,8 +15,10 @@ struct MainCalendarView: View {
             ScrollView{
                 VStack{
                     MonthlyCalendarView()
+                        .frame(height: g.size.height*0.7)
                     MainScheduleView(terms: 1)
-                }.frame(width: g.size.width, height: g.size.height, alignment: .center)
+                        .frame(height: g.size.height*0.6)
+                }.frame(width: g.size.width, height: g.size.height*1.3, alignment: .center)
             }
             .overlay(
                 VStack{

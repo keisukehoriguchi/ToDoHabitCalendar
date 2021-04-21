@@ -27,3 +27,36 @@ extension View {
         self.modifier(CardViewModifier(color: color, radius: radius))
     }
 }
+
+extension Date {
+    var toString: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy/MM/dd"
+//        dateFormatter.locale = Locale(identifier: "ja_JP")
+        dateFormatter.locale = NSLocale.current
+        return dateFormatter.string(from: self)
+    }
+    var toDetailString: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+//        dateFormatter.locale = Locale(identifier: "ja_JP")
+//        dateFormatter.locale = NSLocale.current
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        return dateFormatter.string(from: self)
+    }
+    
+}
+
+private let formatter: NumberFormatter = {
+    let f = NumberFormatter()
+    f.numberStyle = .decimal
+    f.groupingSeparator = ""
+    f.groupingSize = 3
+    return f
+}()
+
+extension Int {
+    var withoutComma: String {
+        return formatter.string(from: NSNumber(integerLiteral: self)) ?? "\(self)"
+    }
+}

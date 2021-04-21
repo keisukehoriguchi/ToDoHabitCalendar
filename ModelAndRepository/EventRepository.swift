@@ -10,9 +10,7 @@ import EventKit
 
 class EventRepository:ObservableObject {
     
-    @Published var titles: [String] = []
-    @Published var startDates: [Date] = []
-    @Published var endDates: [Date] = []
+    @Published var allevents:[EKEvent] = []
     
     ///上3つのArray配列を使用して、カレンダーやリマインダーに応用する。
     
@@ -99,26 +97,80 @@ class EventRepository:ObservableObject {
         }
     }
     
-    func readEvents() {
-        let eventStore = EKEventStore()
+//    func readEvents() {
+//        let calendars = eventStore.calendars(for: .event)
+//        for calendar in calendars {
+//            //if calendar.source.title == "カレンダーの名前" {
+//            ///カレンダーの名前を指定することができる。
+//
+//            let fixedDay = Calendar(identifier: .gregorian).date(from: DateComponents(year: 2021, month: 4, day: 10, hour: 0, minute: 0, second: 0))!
+//            let oneYearAfter = Calendar.current.date(byAdding: .month, value: +12, to: Date())!
+//
+//            let predicate = eventStore.predicateForEvents(withStart: fixedDay, end: oneYearAfter, calendars: [calendar])
+//
+//            let events = eventStore.events(matching: predicate)
+//            for event in events {
+//                self.titles.append(event.title)
+//                self.startDates.append(event.startDate)
+//                self.endDates.append(event.endDate)
+//            }
+//        }
+//    }
+    
+    func readEventsDay(startYear:Int, startMonth:Int, startDay:Int) -> [EKEvent] {
         let calendars = eventStore.calendars(for: .event)
+        var allReturnEvents:[EKEvent] = []
         for calendar in calendars {
             //if calendar.source.title == "カレンダーの名前" {
             ///カレンダーの名前を指定することができる。
-//            let oneMonthAgo = Calendar.current.date(byAdding: .month, value: -1, to: Date())!
-            let twentyYears:Double = (60*60*30*12*20)
-            let threeMonths:Double = (60*60*30*3)
-            let fixedDay = Date(timeIntervalSinceReferenceDate: twentyYears+threeMonths)
-            let oneYearAfter = Calendar.current.date(byAdding: .month, value: +12, to: Date())!
             
-            let predicate = eventStore.predicateForEvents(withStart: fixedDay, end: oneYearAfter, calendars: [calendar])
+            let fixedDay = Calendar(identifier: .gregorian).date(from: DateComponents(year: startYear, month: startMonth, day: startDay, hour: 0, minute: 0, second: 0))!
+            let oneDayAfter = Calendar.current.date(byAdding: .day, value: 1, to: fixedDay)!
+
+            let predicate = eventStore.predicateForEvents(withStart: fixedDay, end: oneDayAfter, calendars: [calendar])
             
             let events = eventStore.events(matching: predicate)
-            for event in events {
-                self.titles.append(event.title)
-                self.startDates.append(event.startDate)
-                self.endDates.append(event.endDate)
-            }
+            
+            allReturnEvents.append(contentsOf: events)
         }
+        return allReturnEvents
     }
+    
+    func readEventsWeek(startYear:Int, startMonth:Int, startDay:Int) -> [EKEvent] {
+        guard startDay != 0 else { return [] }
+        let calendars = eventStore.calendars(for: .event)
+        var allReturnEvents:[EKEvent] = []
+        for calendar in calendars {
+            //if calendar.source.title == "カレンダーの名前" {
+            ///カレンダーの名前を指定することができる。
+            
+            let fixedDay = Calendar(identifier: .gregorian).date(from: DateComponents(year: startYear, month: startMonth, day: startDay, hour: 0, minute: 0, second: 0))!
+            let oneWeekAfter = Calendar.current.date(byAdding: .day, value: 7, to: fixedDay)!
+            let predicate = eventStore.predicateForEvents(withStart: fixedDay, end: oneWeekAfter, calendars: [calendar])
+            
+            let events = eventStore.events(matching: predicate)
+            
+            allReturnEvents.append(contentsOf: events)
+        }
+        return allReturnEvents
+    }
+    
+    func readEventsMonth(startYear:Int, startMonth:Int, startDay:Int) -> [EKEvent] {
+        let calendars = eventStore.calendars(for: .event)
+        var allReturnEvents:[EKEvent] = []
+        for calendar in calendars {
+            //if calendar.source.title == "カレンダーの名前" {
+            ///カレンダーの名前を指定することができる。
+            
+            let fixedDay = Calendar(identifier: .gregorian).date(from: DateComponents(year: startYear, month: startMonth, day: startDay, hour: 0, minute: 0, second: 0))!
+            let oneMonthAfter = Calendar.current.date(byAdding: .month, value: 1, to: fixedDay)!
+            let predicate = eventStore.predicateForEvents(withStart: fixedDay, end: oneMonthAfter, calendars: [calendar])
+            
+            let events = eventStore.events(matching: predicate)
+            
+            allReturnEvents.append(contentsOf: events)
+        }
+        return allReturnEvents
+    }
+    
 }

@@ -14,7 +14,8 @@ struct AddToDoHabit: View {
     @State private var startDate: Date = Date()
     @State private var endDate: Date = Calendar.current.date(byAdding: .hour, value: 1, to: Date())!
     @State private var taskOrHabit:Int = 0
-    
+    @State private var showingAlert = false
+    @State private var alertMessage:String = "イベントを保存しました！"
     @EnvironmentObject var eventRepository:EventRepository
     
     ///上3つの@State変数は、カレンダーにイベントを追加するときに使用します。
@@ -50,6 +51,7 @@ struct AddToDoHabit: View {
                     Button(action: {
                         if self.title != "" {
                             eventRepository.addEvent(startDate: self.startDate, endDate: self.endDate, title: self.title, taskOrHabit:self.taskOrHabit)
+                            self.showingAlert = true
                         } else {
                             let generator = UINotificationFeedbackGenerator()
                             generator.notificationOccurred(.error)
@@ -57,21 +59,26 @@ struct AddToDoHabit: View {
                     }) {
                         Text("add Event")
                     }
+                    .alert(isPresented: $showingAlert, content: {
+                        Alert(title: Text(alertMessage))
+                    })
                 }
-                Section {
-                    Button(action: {
-                        self.isShownReadCalendarView = true
-                        eventRepository.readEvents()
-                    }) {
-                        Text("Read Calendar")
-                            .sheet(isPresented: self.$isShownReadCalendarView) {
-                                ForEach(0..<eventRepository.titles.count, id: \.self) { i in
-                                    Text(eventRepository.titles[i])
-                                }
-                            }
-                    }
-                }
-                .onAppear(perform: eventRepository.allowAuthorization)
+//                Section {
+//                    Button(action: {
+//                        self.isShownReadCalendarView = true
+//                        eventRepository.readEvents()
+//                    }) {
+//                        Text("Read Calendar")
+//                            .sheet(isPresented: self.$isShownReadCalendarView) {
+//                                ScrollView{
+//                                    ForEach(0..<eventRepository.titles.count, id: \.self) { i in
+//                                        Text(eventRepository.titles[i])
+//                                    }
+//                                }
+//                            }
+//                    }
+//                }
+//                .onAppear(perform: eventRepository.allowAuthorization)
             }
         }
     }
