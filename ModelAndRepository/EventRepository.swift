@@ -7,14 +7,16 @@
 
 import Foundation
 import EventKit
+import Combine
 
 class EventRepository:ObservableObject {
     
     @Published var allevents:[EKEvent] = []
-    
     ///上3つのArray配列を使用して、カレンダーやリマインダーに応用する。
     
     let eventStore = EKEventStore()
+    
+    @Published var terms:Int = 0
     
     func allowAuthorization() {
         if getAuthorization_status() {
@@ -55,18 +57,18 @@ class EventRepository:ObservableObject {
         }
     }
     
-    func listEvents() {
-        // 検索条件
-        let startDate = Date()
-        let endDate = Date()
-        let dC = eventStore.defaultCalendarForNewEvents
-        guard let defaultCalendar = dC else {
-            return
-        }
-        let predicate = eventStore.predicateForEvents(withStart: startDate, end: endDate, calendars: [defaultCalendar])
-        // イベントを検索
-        let events = eventStore.eventStoreIdentifier
-    }
+//    func listEvents() {
+//        // 検索条件
+//        let startDate = Date()
+//        let endDate = Date()
+//        let dC = eventStore.defaultCalendarForNewEvents
+//        guard let defaultCalendar = dC else {
+//            return
+//        }
+//        let predicate = eventStore.predicateForEvents(withStart: startDate, end: endDate, calendars: [defaultCalendar])
+//        // イベントを検索
+//        let events = eventStore.eventStoreIdentifier
+//    }
     
     func addEvent(startDate: Date, endDate: Date?, title: String, taskOrHabit:Int) {
         // イベントの情報を準備
@@ -97,26 +99,6 @@ class EventRepository:ObservableObject {
         }
     }
     
-//    func readEvents() {
-//        let calendars = eventStore.calendars(for: .event)
-//        for calendar in calendars {
-//            //if calendar.source.title == "カレンダーの名前" {
-//            ///カレンダーの名前を指定することができる。
-//
-//            let fixedDay = Calendar(identifier: .gregorian).date(from: DateComponents(year: 2021, month: 4, day: 10, hour: 0, minute: 0, second: 0))!
-//            let oneYearAfter = Calendar.current.date(byAdding: .month, value: +12, to: Date())!
-//
-//            let predicate = eventStore.predicateForEvents(withStart: fixedDay, end: oneYearAfter, calendars: [calendar])
-//
-//            let events = eventStore.events(matching: predicate)
-//            for event in events {
-//                self.titles.append(event.title)
-//                self.startDates.append(event.startDate)
-//                self.endDates.append(event.endDate)
-//            }
-//        }
-//    }
-    
     func readEventsDay(startYear:Int, startMonth:Int, startDay:Int) -> [EKEvent] {
         let calendars = eventStore.calendars(for: .event)
         var allReturnEvents:[EKEvent] = []
@@ -126,10 +108,13 @@ class EventRepository:ObservableObject {
             
             let fixedDay = Calendar(identifier: .gregorian).date(from: DateComponents(year: startYear, month: startMonth, day: startDay, hour: 0, minute: 0, second: 0))!
             let oneDayAfter = Calendar.current.date(byAdding: .day, value: 1, to: fixedDay)!
-
+            
             let predicate = eventStore.predicateForEvents(withStart: fixedDay, end: oneDayAfter, calendars: [calendar])
             
-            let events = eventStore.events(matching: predicate)
+            var events = eventStore.events(matching: predicate)
+            events.sort { (event1, event2) -> Bool in
+                event1.startDate < event2.startDate
+            }
             
             allReturnEvents.append(contentsOf: events)
         }
@@ -148,7 +133,10 @@ class EventRepository:ObservableObject {
             let oneWeekAfter = Calendar.current.date(byAdding: .day, value: 7, to: fixedDay)!
             let predicate = eventStore.predicateForEvents(withStart: fixedDay, end: oneWeekAfter, calendars: [calendar])
             
-            let events = eventStore.events(matching: predicate)
+            var events = eventStore.events(matching: predicate)
+            events.sort { (event1, event2) -> Bool in
+                event1.startDate < event2.startDate
+            }
             
             allReturnEvents.append(contentsOf: events)
         }
@@ -166,7 +154,11 @@ class EventRepository:ObservableObject {
             let oneMonthAfter = Calendar.current.date(byAdding: .month, value: 1, to: fixedDay)!
             let predicate = eventStore.predicateForEvents(withStart: fixedDay, end: oneMonthAfter, calendars: [calendar])
             
-            let events = eventStore.events(matching: predicate)
+            var events = eventStore.events(matching: predicate)
+            
+            events.sort { (event1, event2) -> Bool in
+                event1.startDate < event2.startDate
+            }
             
             allReturnEvents.append(contentsOf: events)
         }

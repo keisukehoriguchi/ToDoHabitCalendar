@@ -32,8 +32,8 @@ struct MonthlyCalendarView: View {
                 })
             }
             .padding(.horizontal, 10)
-            .padding(.top, 15)
-            .padding(.bottom, 5)
+            .padding(.top, 10)
+            .padding(.bottom, 0)
             
             HStack{
                 ForEach(0...dayOfWeekLabel.count-1,id: \.self){
@@ -43,7 +43,8 @@ struct MonthlyCalendarView: View {
                     Divider()
                 }
             }
-            .frame(height: 30)
+            .frame(height: 20)
+            
             ForEach(calendarUseCase.numberOfWeeksArray.indices , id: \.self){ week in
                 HStack{
                     DayViewOnCalendar(year: calendarUseCase.thisYear, month: calendarUseCase.thisMonth, theDay: calendarUseCase.daysArray[(0+week*7)], events: eventRepository.readEventsDay(startYear: calendarUseCase.thisYear, startMonth: calendarUseCase.thisMonth, startDay: calendarUseCase.daysArray[(0+week*7)]))

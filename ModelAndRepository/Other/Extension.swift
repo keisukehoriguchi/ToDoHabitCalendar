@@ -45,6 +45,14 @@ extension Date {
         return dateFormatter.string(from: self)
     }
     
+    var toStringOnlyDate: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd"
+//        dateFormatter.locale = Locale(identifier: "ja_JP")
+        dateFormatter.locale = NSLocale.current
+        return dateFormatter.string(from: self)
+    }
+    
 }
 
 private let formatter: NumberFormatter = {

@@ -16,9 +16,9 @@ struct MainCalendarView: View {
                 VStack{
                     MonthlyCalendarView()
                         .frame(height: g.size.height*0.7)
-                    MainScheduleView(terms: 1)
-                        .frame(height: g.size.height*0.6)
-                }.frame(width: g.size.width, height: g.size.height*1.3, alignment: .center)
+                    MainScheduleView()
+                        .frame(height: g.size.height*0.8)
+                }.frame(width: g.size.width, height: g.size.height*1.5, alignment: .center)
             }
             .overlay(
                 VStack{
